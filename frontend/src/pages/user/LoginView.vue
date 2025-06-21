@@ -1,7 +1,7 @@
-<!-- filepath: /home/geziel/projects/dotnet-vue/frontend/src/pages/LoginView.vue -->
 <script setup lang="ts">
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
+  import { apiFetch } from '@/utils/api';
 
   const username = ref('');
   const password = ref('');
@@ -10,22 +10,25 @@
 
   async function login() {
     error.value = '';
+    console.log('Attempting login with:', { username: username.value, password: password.value });
     if (!username.value || !password.value) {
       error.value = 'Username and password are required.';
       return;
     }
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await apiFetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: username.value, password: password.value }),
         credentials: 'include', // Important: allow cookies to be set
       });
+      console.log('Login response:', res);
       if (!res.ok) {
         const data = await res.json();
         error.value = data.error || 'Login failed';
         return;
       }
+      console.log('Login successful');
       void router.push('/');
     } catch (e: any) {
       error.value = 'Network error';

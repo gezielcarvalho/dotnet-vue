@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ref, onMounted } from 'vue';
+  import { apiFetch } from '@/utils/api';
 
   // Health check logic
   const health = ref<null | {
@@ -11,8 +12,7 @@
 
   onMounted(async () => {
     try {
-      const res = await fetch('/api/home/health');
-      if (!res.ok) throw new Error('Failed to fetch health check');
+      const res = await apiFetch('/api/home/health');
       health.value = await res.json();
     } catch (err: any) {
       healthError.value = err.message || 'Unknown error';
