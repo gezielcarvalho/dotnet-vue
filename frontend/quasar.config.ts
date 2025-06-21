@@ -85,6 +85,13 @@ export default function (/* ctx */) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver
     devServer: {
+      proxy: {
+        '/api': {
+          target: 'http://localhost:5084', // Your backend URL
+          changeOrigin: true,
+          secure: false,
+        },
+      },
       // https: true,
       open: true, // opens browser window automatically
     },

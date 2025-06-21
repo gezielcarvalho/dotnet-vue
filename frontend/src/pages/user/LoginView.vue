@@ -1,30 +1,36 @@
 <!-- filepath: /home/geziel/projects/dotnet-vue/frontend/src/pages/LoginView.vue -->
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import Cookies from 'js-cookie';
+  import { ref } from 'vue';
+  import { useRouter } from 'vue-router';
 
-const username = ref('');
-const password = ref('');
-const error = ref('');
-const router = useRouter();
+  const username = ref('');
+  const password = ref('');
+  const error = ref('');
+  const router = useRouter();
 
-function login() {
-  error.value = '';
-  if (!username.value || !password.value) {
-    error.value = 'Username and password are required.';
-    return;
+  async function login() {
+    error.value = '';
+    if (!username.value || !password.value) {
+      error.value = 'Username and password are required.';
+      return;
+    }
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: username.value, password: password.value }),
+        credentials: 'include', // Important: allow cookies to be set
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        error.value = data.error || 'Login failed';
+        return;
+      }
+      router.push('/');
+    } catch (e) {
+      error.value = 'Network error';
+    }
   }
-  // Fake JWT token
-  const fakeJwt = 'fake-jwt-token';
-  // Set cookie (HttpOnly cannot be set from JS, only from server)
-  Cookies.set('jwt', fakeJwt, {
-    secure: true,
-    sameSite: 'Strict',
-    // httpOnly: true, // <-- This will be ignored by browsers if set from JS
-  });
-  router.push('/');
-}
 </script>
 
 <template>
