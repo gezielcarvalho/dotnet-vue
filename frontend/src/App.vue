@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { useRouter, RouterLink, RouterView } from 'vue-router';
-  import logoUrl from '/src/assets/logo.svg';
+  import logoUrl from '@/assets/logo.svg';
 
   const showMenu = ref(false);
   const router = useRouter();
