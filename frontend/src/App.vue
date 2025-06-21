@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { useRouter, RouterLink, RouterView } from 'vue-router';
+  import logoUrl from '/src/assets/logo.svg';
 
   const showMenu = ref(false);
   const router = useRouter();
@@ -22,7 +23,7 @@
         <!-- Left: Logo + Menu -->
         <div class="flex items-center space-x-6">
           <RouterLink to="/">
-            <img alt="Vue logo" class="w-10 h-10" src="src/assets/logo.svg" />
+            <img alt="Vue logo" class="w-10 h-10" :src="logoUrl" />
           </RouterLink>
 
           <div class="flex space-x-4">
@@ -47,13 +48,24 @@
           <div
             v-if="showMenu"
             class="absolute right-0 mt-2 w-48 bg-blue-50 text-blue-900 rounded-md shadow-lg py-1 z-50">
-            <a @click.prevent="navigateAndClose('/profile')" class="submenu-link" href="#">
+            <RouterLink
+              to="/user/profile"
+              class="submenu-link"
+              @click.prevent="navigateAndClose('/user/profile')">
               Profile
-            </a>
-            <a @click.prevent="navigateAndClose('/settings')" class="submenu-link" href="#">
+            </RouterLink>
+            <RouterLink
+              to="/user/settings"
+              class="submenu-link"
+              @click.prevent="navigateAndClose('/user/settings')">
               Settings
-            </a>
-            <a @click.prevent="navigateAndClose('/logout')" class="submenu-link" href="#">Logout</a>
+            </RouterLink>
+            <RouterLink
+              to="/user/logout"
+              class="submenu-link"
+              @click.prevent="navigateAndClose('/user/logout')">
+              Logout
+            </RouterLink>
           </div>
         </div>
       </div>
