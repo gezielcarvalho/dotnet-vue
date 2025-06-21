@@ -26,9 +26,10 @@
         error.value = data.error || 'Login failed';
         return;
       }
-      router.push('/');
-    } catch (e) {
+      void router.push('/');
+    } catch (e: any) {
       error.value = 'Network error';
+      console.error('Login error:', e);
     }
   }
 </script>

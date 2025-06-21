@@ -11,7 +11,7 @@
 
   onMounted(async () => {
     try {
-      const res = await fetch('/api/health');
+      const res = await fetch('/api/home/health');
       if (!res.ok) throw new Error('Failed to fetch health check');
       health.value = await res.json();
     } catch (err: any) {
