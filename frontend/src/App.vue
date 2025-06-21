@@ -1,11 +1,17 @@
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { RouterLink, RouterView } from 'vue-router';
+  import { useRouter, RouterLink, RouterView } from 'vue-router';
 
   const showMenu = ref(false);
+  const router = useRouter();
 
   const toggleMenu = () => {
     showMenu.value = !showMenu.value;
+  };
+
+  const navigateAndClose = (to: string) => {
+    showMenu.value = false;
+    void router.push(to);
   };
 </script>
 
@@ -20,23 +26,13 @@
           </RouterLink>
 
           <div class="flex space-x-4">
-            <RouterLink
-              to="/"
-              class="rounded-md px-3 py-2 text-sm font-medium hover:bg-blue-200 hover:text-blue-900"
-              active-class="bg-blue-300 text-blue-900"
-              exact>
+            <RouterLink to="/" class="nav-link" active-class="nav-link-active" exact>
               Home
             </RouterLink>
-            <RouterLink
-              to="/about"
-              class="rounded-md px-3 py-2 text-sm font-medium hover:bg-blue-200 hover:text-blue-900"
-              active-class="bg-blue-300 text-blue-900">
+            <RouterLink to="/about" class="nav-link" active-class="nav-link-active">
               About
             </RouterLink>
-            <RouterLink
-              to="/contact"
-              class="rounded-md px-3 py-2 text-sm font-medium hover:bg-blue-200 hover:text-blue-900"
-              active-class="bg-blue-300 text-blue-900">
+            <RouterLink to="/contact" class="nav-link" active-class="nav-link-active">
               Contact
             </RouterLink>
           </div>
@@ -51,9 +47,13 @@
           <div
             v-if="showMenu"
             class="absolute right-0 mt-2 w-48 bg-blue-50 text-blue-900 rounded-md shadow-lg py-1 z-50">
-            <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-100">Profile</a>
-            <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-100">Settings</a>
-            <a href="#" class="block px-4 py-2 text-sm hover:bg-blue-100">Logout</a>
+            <a @click.prevent="navigateAndClose('/profile')" class="submenu-link" href="#">
+              Profile
+            </a>
+            <a @click.prevent="navigateAndClose('/settings')" class="submenu-link" href="#">
+              Settings
+            </a>
+            <a @click.prevent="navigateAndClose('/logout')" class="submenu-link" href="#">Logout</a>
           </div>
         </div>
       </div>
