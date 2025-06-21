@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+
+@layer components {
+  .RouterLink {
+    @apply hover:bg-red-200;
+  }
+}
