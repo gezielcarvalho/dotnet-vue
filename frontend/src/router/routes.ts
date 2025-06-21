@@ -19,6 +19,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/user/SettingsView.vue'),
       },
       { path: 'logout', name: 'logout', component: () => import('@/pages/user/LogoutView.vue') },
+      { path: '/login', name: 'login', component: () => import('@/pages/user/LoginView.vue') },
     ],
   },
 ];
