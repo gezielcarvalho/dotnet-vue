@@ -1,0 +1,24 @@
+{
+  "name": "vue-dotnet-ssr-app",
+  "dockerComposeFile": [
+    "../docker/docker-compose.yml"
+  ],
+  "service": "frontend",
+  "workspaceFolder": "/app",
+  "shutdownAction": "stopCompose",
+  "extensions": [
+    "ms-dotnettools.csharp",
+    "ms-vscode.vscode-typescript-next",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint"
+  ],
+  "settings": {
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "editor.formatOnSave": true
+  },
+  "forwardPorts": [
+    3000,
+    5000
+  ],
+  "postCreateCommand": "npm install --prefix ../frontend && dotnet restore ../backend"
+}

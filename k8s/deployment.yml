@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vue-ssr-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: vue-ssr-frontend
+  template:
+    metadata:
+      labels:
+        app: vue-ssr-frontend
+    spec:
+      containers:
+      - name: vue-ssr-frontend
+        image: youruser/vue-ssr-frontend:latest
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vue-ssr-frontend
+spec:
+  selector:
+    app: vue-ssr-frontend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
