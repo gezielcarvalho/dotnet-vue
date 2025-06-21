@@ -11,6 +11,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Add controllers support
+builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -27,19 +30,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.MapGet("/health", () =>
-{
-    var response = new HealthCheckResponse
-    (
-        "Service is healthy",
-        DateTime.UtcNow,
-        Guid.NewGuid().ToString("N")
-    );
-    return response;
-})
-.WithName("HealthCheck")
-.WithOpenApi();
+// Map controllers
+app.MapControllers();
 
 app.Run();
-
-record HealthCheckResponse(string Message, DateTime Timestamp, string InstanceId);
