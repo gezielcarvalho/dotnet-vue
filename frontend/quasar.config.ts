@@ -1,10 +1,12 @@
 import { fileURLToPath, URL } from 'node:url';
+import { loadEnv } from 'vite';
 
-const apiHost = process.env.VITE_API_HOST;
-const apiPort = process.env.VITE_API_PORT;
-const ssrPort = process.env.VITE_SSR_PORT;
+export default function () {
+  const env = loadEnv(process.env.NODE_ENV || '', process.cwd(), '');
+  const apiHost = env.VITE_API_HOST || '';
+  const apiPort = env.VITE_API_PORT || 0;
+  const ssrPort = env.VITE_SSR_PORT || 0;
 
-export default function (/* ctx */) {
   return {
     boot: ['pinia'],
 
