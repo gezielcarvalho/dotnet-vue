@@ -1,26 +1,13 @@
 <!-- filepath: /home/geziel/projects/dotnet-vue/frontend/src/components/NavBar.vue -->
 <script setup lang="ts">
-  import { ref, computed } from 'vue';
-  import { useRouter, useRoute, RouterLink } from 'vue-router';
+  import { computed } from 'vue';
+  import { useRoute, RouterLink } from 'vue-router';
   import logoUrl from '@/assets/logo.svg';
+  import UserMenu from './UserMenu.vue';
 
-  const showMenu = ref(false);
-  const router = useRouter();
   const route = useRoute();
-
-  // List of route names or paths where navbar should be hidden
   const hideNavbarOn = ['/user/login', '/user/logout', '/user/register'];
-
   const showNavbar = computed(() => !hideNavbarOn.includes(route.path));
-
-  const toggleMenu = () => {
-    showMenu.value = !showMenu.value;
-  };
-
-  const navigateAndClose = (to: string) => {
-    showMenu.value = false;
-    void router.push(to);
-  };
 </script>
 
 <template>
@@ -46,35 +33,8 @@
           </div>
         </div>
 
-        <!-- Right: Profile + submenu -->
-        <div class="relative">
-          <button @click="toggleMenu" class="flex items-center rounded-full p-1 hover:bg-blue-200">
-            <span class="inline-block w-8 h-8 bg-blue-400 rounded-full"></span>
-          </button>
-
-          <div
-            v-if="showMenu"
-            class="absolute right-0 mt-2 w-48 bg-blue-50 text-blue-900 rounded-md shadow-lg py-1 z-50">
-            <RouterLink
-              to="/user/profile"
-              class="submenu-link"
-              @click.prevent="navigateAndClose('/user/profile')">
-              Profile
-            </RouterLink>
-            <RouterLink
-              to="/user/settings"
-              class="submenu-link"
-              @click.prevent="navigateAndClose('/user/settings')">
-              Settings
-            </RouterLink>
-            <RouterLink
-              to="/user/logout"
-              class="submenu-link"
-              @click.prevent="navigateAndClose('/user/logout')">
-              Logout
-            </RouterLink>
-          </div>
-        </div>
+        <!-- Right: User menu -->
+        <UserMenu />
       </div>
     </nav>
   </header>
