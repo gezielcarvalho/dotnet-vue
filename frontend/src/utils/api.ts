@@ -1,6 +1,9 @@
+import { useAuthStore } from '@/stores/auth';
+
 export async function apiFetch(input: RequestInfo, init?: RequestInit) {
   const res = await fetch(input, { ...init, credentials: 'include' });
   if (res.status === 401 || res.status === 403) {
+    useAuthStore().setAuthenticated(false);
     window.location.href = '/user/login';
     throw new Error('Unauthorized');
   }

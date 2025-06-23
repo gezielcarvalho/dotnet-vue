@@ -1,7 +1,9 @@
 <script setup lang="ts">
   import { ref, onMounted } from 'vue';
   import { apiFetch } from '@/utils/api';
+  import { useAuthStore } from '@/stores/auth';
 
+  const { authenticated } = useAuthStore();
   // Health check logic
   const health = ref<null | {
     message: string;
@@ -42,4 +44,14 @@
       <div>Loading health status...</div>
     </template>
   </div>
+  <template v-if="authenticated">
+    <div class="text-gray-500">Content only for authenticated users</div>
+  </template>
+  <template v-else>
+    <div class="text-gray-500">
+      Click
+      <RouterLink to="/user/login">here</RouterLink>
+      to log in.
+    </div>
+  </template>
 </template>

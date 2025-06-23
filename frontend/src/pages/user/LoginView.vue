@@ -2,6 +2,7 @@
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { apiFetch } from '@/utils/api';
+  import { useAuthStore } from '@/stores/auth';
 
   const username = ref('');
   const password = ref('');
@@ -26,12 +27,16 @@
       if (!res.ok) {
         const data = await res.json();
         error.value = data.error || 'Login failed';
+        useAuthStore().setAuthenticated(false);
         return;
       }
       console.log('Login successful');
+      // set authenticated state to true in pinia store
+      useAuthStore().setAuthenticated(true);
       void router.push('/');
     } catch (e: any) {
       error.value = 'Network error';
+      useAuthStore().setAuthenticated(false);
       console.error('Login error:', e);
     }
   }

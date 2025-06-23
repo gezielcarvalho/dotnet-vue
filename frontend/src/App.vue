@@ -1,10 +1,16 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
-  import { useRouter, RouterLink, RouterView } from 'vue-router';
+  import { ref, computed } from 'vue';
+  import { useRouter, useRoute, RouterLink, RouterView } from 'vue-router';
   import logoUrl from '@/assets/logo.svg';
 
   const showMenu = ref(false);
   const router = useRouter();
+  const route = useRoute();
+
+  // List of route names or paths where navbar should be hidden
+  const hideNavbarOn = ['/user/login', '/user/logout', '/user/register'];
+
+  const showNavbar = computed(() => !hideNavbarOn.includes(route.path));
 
   const toggleMenu = () => {
     showMenu.value = !showMenu.value;
@@ -17,7 +23,7 @@
 </script>
 
 <template>
-  <header class="bg-blue-100 text-blue-900">
+  <header v-if="showNavbar" class="bg-blue-100 text-blue-900">
     <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <!-- Left: Logo + Menu -->
@@ -71,7 +77,6 @@
       </div>
     </nav>
   </header>
-
   <main class="bg-blue-50 min-h-screen">
     <RouterView />
   </main>
