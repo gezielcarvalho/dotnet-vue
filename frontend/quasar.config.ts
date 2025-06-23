@@ -1,5 +1,9 @@
 import { fileURLToPath, URL } from 'node:url';
 
+const apiHost = process.env.VITE_API_HOST;
+const apiPort = process.env.VITE_API_PORT;
+const ssrPort = process.env.VITE_SSR_PORT;
+
 export default function (/* ctx */) {
   return {
     boot: ['pinia'],
@@ -45,12 +49,11 @@ export default function (/* ctx */) {
     devServer: {
       proxy: {
         '/api': {
-          target: 'http://localhost:5084', // Your backend URL
+          target: `${apiHost}:${apiPort}`,
           changeOrigin: true,
           secure: false,
         },
       },
-      // https: true,
       open: true, // opens browser window automatically
     },
 
@@ -63,7 +66,7 @@ export default function (/* ctx */) {
     animations: [],
 
     ssr: {
-      prodPort: 3000, // The default port that the production server should use
+      prodPort: ssrPort, // The default port that the production server should use
 
       middlewares: [
         'render', // keep this as last one
