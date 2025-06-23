@@ -1,21 +1,21 @@
 <script setup lang="ts">
   import { ref, onMounted } from 'vue';
-  import { apiFetch } from '@/utils/api';
+  import { getHealth } from '@/services/healthService';
   import { useAuthStore } from '@/stores/auth';
 
   const { authenticated } = useAuthStore();
-  // Health check logic
-  const health = ref<null | {
+  interface HealthStatus {
     message: string;
     timestamp: string;
     instanceId: string;
-  }>(null);
+  }
+
+  const health = ref<HealthStatus | null>(null);
   const healthError = ref<string | null>(null);
 
   onMounted(async () => {
     try {
-      const res = await apiFetch('/api/home/health');
-      health.value = await res.json();
+      health.value = await getHealth();
     } catch (err: any) {
       healthError.value = err.message || 'Unknown error';
     }

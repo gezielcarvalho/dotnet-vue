@@ -1,50 +1,27 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
-  import { apiFetch } from '@/utils/api';
-  import { useAuthStore } from '@/stores/auth';
+  import { login } from '@/services/authService';
 
   const username = ref('');
   const password = ref('');
   const error = ref('');
   const router = useRouter();
 
-  async function login() {
+  async function handleLogin() {
     error.value = '';
-    console.log('Attempting login with:', { username: username.value, password: password.value });
-    if (!username.value || !password.value) {
-      error.value = 'Username and password are required.';
+    const result = await login(username.value, password.value);
+    if (!result.success) {
+      error.value = result.error;
       return;
     }
-    try {
-      const res = await apiFetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: username.value, password: password.value }),
-        credentials: 'include', // Important: allow cookies to be set
-      });
-      console.log('Login response:', res);
-      if (!res.ok) {
-        const data = await res.json();
-        error.value = data.error || 'Login failed';
-        useAuthStore().setAuthenticated(false);
-        return;
-      }
-      console.log('Login successful');
-      // set authenticated state to true in pinia store
-      useAuthStore().setAuthenticated(true);
-      void router.push('/');
-    } catch (e: any) {
-      error.value = 'Network error';
-      useAuthStore().setAuthenticated(false);
-      console.error('Login error:', e);
-    }
+    void router.push('/');
   }
 </script>
 
 <template>
   <div class="flex flex-col items-center justify-center min-h-screen bg-blue-50">
-    <form @submit.prevent="login" class="bg-white p-8 rounded shadow-md w-full max-w-sm">
+    <form @submit.prevent="handleLogin" class="bg-white p-8 rounded shadow-md w-full max-w-sm">
       <h2 class="text-2xl font-bold mb-6 text-blue-900">Login</h2>
       <div class="mb-4">
         <label class="block mb-1 text-blue-900">Username</label>
