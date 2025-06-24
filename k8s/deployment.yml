@@ -13,10 +13,36 @@ spec:
         app: vue-ssr-frontend
     spec:
       containers:
-      - name: vue-ssr-frontend
-        image: youruser/vue-ssr-frontend:latest
-        ports:
-        - containerPort: 3000
+        - name: vue-ssr-frontend
+          image: gezielcarvalho/quasar-ssr:v1
+          ports:
+            - containerPort: 3000
+          env:
+            - name: VITE_API_HOST
+              value: "http://your-backend-service"
+            - name: VITE_API_PORT
+              value: "5084"
+            - name: VITE_SSR_PORT
+              value: "3000"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
 ---
 apiVersion: v1
 kind: Service
@@ -26,6 +52,6 @@ spec:
   selector:
     app: vue-ssr-frontend
   ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 3000
+    - protocol: TCP
+      port: 80
+      targetPort: 3000

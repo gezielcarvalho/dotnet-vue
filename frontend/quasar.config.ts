@@ -1,11 +1,12 @@
+import { configure } from 'quasar/wrappers';
 import { fileURLToPath, URL } from 'node:url';
 import { loadEnv } from 'vite';
 
-export default function () {
+export default configure((/* ctx */) => {
   const env = loadEnv(process.env.NODE_ENV || '', process.cwd(), '');
   const apiHost = env.VITE_API_HOST || '';
   const apiPort = env.VITE_API_PORT || 0;
-  const ssrPort = env.VITE_SSR_PORT || 0;
+  const ssrPort = Number(env.VITE_SSR_PORT) || 0;
 
   return {
     boot: ['pinia'],
@@ -27,24 +28,20 @@ export default function () {
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
-      extendViteConf(viteConf: any) {
+      extendViteConf(viteConf) {
         viteConf.resolve = viteConf.resolve || {};
-        viteConf.resolve.alias = viteConf.resolve.alias || {};
-        viteConf.resolve.alias['@'] = fileURLToPath(new URL('./src', import.meta.url));
+        viteConf.resolve.alias = {
+          ...(viteConf.resolve.alias || {}),
+          '@': fileURLToPath(new URL('./src', import.meta.url)),
+          '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
+          '@layouts': fileURLToPath(new URL('./src/layouts', import.meta.url)),
+          '@pages': fileURLToPath(new URL('./src/pages', import.meta.url)),
+          '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
+        };
       },
 
       vitePlugins: [
-        [
-          'vite-plugin-checker',
-          {
-            vueTsc: true,
-            eslint: {
-              lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue}"',
-              useFlatConfig: true,
-            },
-          },
-          { server: false },
-        ],
+        // Add your Vite plugins here
       ],
     },
 
@@ -104,4 +101,4 @@ export default function () {
       extraScripts: [],
     },
   };
-}
+});

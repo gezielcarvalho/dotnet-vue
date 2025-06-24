@@ -2,7 +2,7 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { useRouter, RouterLink } from 'vue-router';
-  import { useAuthStore } from '@/stores/auth';
+  import { useAuthStore } from '../stores/auth';
 
   const showMenu = ref(false);
   const router = useRouter();

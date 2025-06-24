@@ -1,4 +1,4 @@
-import { useAuthStore } from '@/stores/auth';
+import { useAuthStore } from '../stores/auth';
 
 export async function apiFetch(input: RequestInfo, init?: RequestInit) {
   const res = await fetch(input, { ...init, credentials: 'include' });

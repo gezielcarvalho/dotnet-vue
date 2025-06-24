@@ -1,4 +1,4 @@
-import { apiFetch } from '@/utils/api';
+import { apiFetch } from '../utils/api';
 
 export async function getHealth() {
   const res = await apiFetch('/api/home/health');

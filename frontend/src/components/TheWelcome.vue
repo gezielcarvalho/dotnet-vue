@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref, onMounted } from 'vue';
-  import { getHealth } from '@/services/healthService';
-  import { useAuthStore } from '@/stores/auth';
+  import { getHealth } from '../services/healthService';
+  import { useAuthStore } from '../stores/auth';
 
   const { authenticated } = useAuthStore();
   interface HealthStatus {

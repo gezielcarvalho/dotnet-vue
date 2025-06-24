@@ -2,7 +2,9 @@
 FROM node:24-alpine AS build
 WORKDIR /app
 COPY . .
-RUN npm install && npm run build
+RUN npm install
+RUN npx quasar prepare
+RUN npm run build:ssr
 
 # Production stage
 FROM node:24-alpine

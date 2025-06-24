@@ -2,7 +2,7 @@
 <script setup lang="ts">
   import { computed } from 'vue';
   import { useRoute, RouterLink } from 'vue-router';
-  import logoUrl from '@/assets/logo.svg';
+  import logoUrl from '../assets/logo.svg';
   import UserMenu from './UserMenu.vue';
 
   const route = useRoute();

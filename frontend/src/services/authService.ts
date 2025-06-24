@@ -1,5 +1,5 @@
-import { apiFetch } from '@/utils/api';
-import { useAuthStore } from '@/stores/auth';
+import { apiFetch } from '../utils/api';
+import { useAuthStore } from '../stores/auth';
 
 export async function login(username: string, password: string) {
   const authStore = useAuthStore();
