@@ -1,13 +1,17 @@
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure Kestrel to bind to all interfaces in Docker
+builder.WebHost.UseUrls("http://0.0.0.0:5084");
+
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:9000")
+        policy.WithOrigins("http://localhost:9000", "http://localhost:3000", "http://frontend:3000")
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials(); // Important for cookies
     });
 });
 
@@ -28,7 +32,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Remove HTTPS redirection for Docker
+// app.UseHttpsRedirection();
 
 // Map controllers
 app.MapControllers();

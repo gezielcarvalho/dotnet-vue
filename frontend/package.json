@@ -17,6 +17,7 @@
   "dependencies": {
     "@quasar/extras": "^1.16.4",
     "@tailwindcss/postcss": "^4.1.10",
+    "http-proxy-middleware": "^3.0.5",
     "js-cookie": "^3.0.5",
     "pinia": "^3.0.3",
     "vue": "^3.4.18",

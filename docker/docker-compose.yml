@@ -1,17 +1,36 @@
 services:
-  frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    volumes:
-      - ../frontend:/app
   backend:
     build:
       context: ../backend
       dockerfile: ../docker/backend.Dockerfile
     ports:
-      - "5000:5000"
-    volumes:
-      - ../backend:/app
+      - "5084:5084"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_HOST=http://backend
+        - VITE_API_PORT=5084
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - VITE_API_HOST=http://backend
+      - VITE_API_PORT=5084
+      - VITE_SSR_PORT=3000
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge

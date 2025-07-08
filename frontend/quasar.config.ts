@@ -26,7 +26,7 @@ export default configure((/* ctx */) => {
         vueShim: true,
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // Change from 'hash' to 'history' for SSR
 
       extendViteConf(viteConf) {
         viteConf.resolve = viteConf.resolve || {};
@@ -68,6 +68,7 @@ export default configure((/* ctx */) => {
       prodPort: ssrPort, // The default port that the production server should use
 
       middlewares: [
+        'api-proxy', // Add API proxy middleware
         'render', // keep this as last one
       ],
 
