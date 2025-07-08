@@ -12,8 +12,9 @@ ENV VITE_API_PORT=$VITE_API_PORT
 ENV NODE_ENV=production
 
 COPY package*.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install --legacy-peer-deps --ignore-scripts
 COPY . .
+RUN npx quasar prepare
 RUN npm run build:ssr
 
 # Production stage
