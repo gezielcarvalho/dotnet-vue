@@ -1,25 +1,102 @@
+---
+# Backend Deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vue-ssr-frontend
+  name: dotnet-vue-backend
+  labels:
+    app: dotnet-vue-backend
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: vue-ssr-frontend
+      app: dotnet-vue-backend
   template:
     metadata:
       labels:
-        app: vue-ssr-frontend
+        app: dotnet-vue-backend
     spec:
       containers:
-        - name: vue-ssr-frontend
-          image: gezielcarvalho/quasar-ssr:v1
+        - name: backend
+          image: your-registry/dotnet-vue-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5084
+              protocol: TCP
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: ASPNETCORE_URLS
+              value: "http://+:5084"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /api/home/health
+              port: 5084
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/home/health
+              port: 5084
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+---
+# Backend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: dotnet-vue-backend
+  labels:
+    app: dotnet-vue-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: dotnet-vue-backend
+  ports:
+    - protocol: TCP
+      port: 5084
+      targetPort: 5084
+---
+# Frontend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dotnet-vue-frontend
+  labels:
+    app: dotnet-vue-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dotnet-vue-frontend
+  template:
+    metadata:
+      labels:
+        app: dotnet-vue-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: your-registry/dotnet-vue-frontend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
+              protocol: TCP
           env:
+            - name: NODE_ENV
+              value: "production"
             - name: VITE_API_HOST
-              value: "http://your-backend-service"
+              value: "http://dotnet-vue-backend"
             - name: VITE_API_PORT
               value: "5084"
             - name: VITE_SSR_PORT
@@ -37,20 +114,28 @@ spec:
               port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 3
 ---
+# Frontend Service
 apiVersion: v1
 kind: Service
 metadata:
-  name: vue-ssr-frontend
+  name: dotnet-vue-frontend
+  labels:
+    app: dotnet-vue-frontend
 spec:
+  type: LoadBalancer
   selector:
-    app: vue-ssr-frontend
+    app: dotnet-vue-frontend
   ports:
     - protocol: TCP
       port: 80
